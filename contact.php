@@ -31,7 +31,9 @@
     <?php include('./includes/menu.inc.php'); ?>
     <div id="maincontent">
         <h2>Contact Us</h2>
-        <?php if($missing || $errors) {?>
+        <?php if ($_POST && $suspect) { ?>
+            <p class="warning">Sorry, your mail could not be sent. Please try later.</p>
+        <?php } elseif ($missing || $errors) {?>
         	<p class="warning">Please fix the item(s) indicated.</p>
         <?php } ?>
       <p>Ut enim ad minim veniam, quis nostrud exercitation consectetur adipisicing elit. Velit esse cillum dolore ullamco laboris nisi in reprehenderit in voluptate. Mollit anim id est laborum. Sunt in culpa duis aute irure dolor excepteur sint occaecat.</p>
@@ -42,7 +44,10 @@
                     <span class="warning">Please enter your name</span>
                 <?php } ?>
                 </label>
-                <input name="name" id="name" type="text" class="formbox">
+                <input name="name" id="name" type="text" class="formbox"
+                <?php if ($missing || $errors) {
+                    echo 'value="' . htmlentities($name, ENT_COMPAT, 'UTF-8') . '"';
+                } ?> >
             </p>
             <p>
                 <label for="email">Email:
@@ -50,7 +55,10 @@
                     <span class="warning">Please enter your email address</span>
                 <?php } ?>
                 </label>
-                <input name="email" id="email" type="text" class="formbox">
+                <input name="email" id="email" type="text" class="formbox"
+                <?php if ($missing || $errors) {
+                    echo 'value="' . htmlentities($email, ENT_COMPAT, 'UTF-8') . '"';
+                } ?> >
             </p>
             <p>
                 <label for="comments">Comments:
