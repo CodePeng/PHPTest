@@ -11,7 +11,7 @@
 		$subject = 'Feedback from Japan Journey';
 		//list expected fields
 		$expected = array('name','email','comments');
-		$required = array('name','comments');
+		$required = array('name','comments','email');
 		require('./includes/processmail.inc.php');
 	}
 ?>
