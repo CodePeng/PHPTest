@@ -33,10 +33,43 @@ if (!$suspect) {
 }
 // validate the user's email
 if (!$suspect && !empty($email)) {
-    $validemail = filter_input(INPUT_POST,'email',FILTER_VALIDATE_EMAIL);
-    if($validemail) {
-        $headers .= "\r\nReplay-To: {$validemail}";
+    $validEmail = filter_input(INPUT_POST,'email',FILTER_VALIDATE_EMAIL);
+    if($validEmail) {
+        $headers .= "\r\nReplay-To: {$validEmail}";
     } else {
         $errors['email'] = true;
     }
+}
+$mailSent = false;
+// go ahead only if not suspect and all required fields OK
+if (!$suspect && !$missing && !$errors) {
+    // initialize the $message variable
+    $message ='';
+    // loop through the $expected array
+    foreach ($expected as $item) {
+        // assign the value of the current item to $val
+        if (isset(${$item}) && !empty(${$item})) {
+            $val = ${$item};
+        } else {
+            // if it has no value, assign 'Not selected'
+            $val = 'Not selected';
+        }
+        // if an array, expand as comma-separated string
+        if (is_array($val)) {
+            $val = implode(', ', $val);
+        }
+        // replace underscores and hyphens in the label with spaces
+        $item = str_replace(array('-','_'), ' ', $item);
+        // add label and value to the message body
+        $message .= ucfirst($item) . ": $val\r\n\r\n";
+    }
+
+    // limit line length to 70 characters
+    $message = wordwrap($message, 70);
+
+    $mailSent = mail($to, $subject, $message, $headers);
+    if (!$mailSent) {
+        $errors['mailFail'] = true;
+    }
+
 }

@@ -16,6 +16,10 @@
         $headers = "From: Japan Journey<feedback@example.com>\r\n";
         $headers .= 'Content-Type: text/plain; charset=utf-8';
 		require('./includes/processmail.inc.php');
+        if ($mailSent) {
+            header("Location: http://{$_SERVER['HTTP_HOST']}" . dirname($_SERVER['PHP_SELF']) . "/thank_you.php");
+            exit;
+        }
 	}
 ?>
 <!DOCTYPE HTML>
@@ -34,7 +38,7 @@
     <?php include('./includes/menu.inc.php'); ?>
     <div id="maincontent">
         <h2>Contact Us</h2>
-        <?php if ($_POST && $suspect) { ?>
+        <?php if (($_POST && $suspect) || ($_POST && isset($errors['mailFail']))) { ?>
             <p class="warning">Sorry, your mail could not be sent. Please try later.</p>
         <?php } elseif ($missing || $errors) {?>
         	<p class="warning">Please fix the item(s) indicated.</p>
@@ -81,7 +85,11 @@
             </p>
         </form>
         <pre>
-        <?php if($_POST) {print_r($_POST);} ?>
+        <?php if($_POST && $mailSent) {
+            echo "\n";
+            echo htmlentities($message, ENT_COMPAT, 'UTF-8') . "\n";
+            echo 'Headers: ' . htmlentities($headers, ENT_COMPAT, 'UTF-8');
+        } ?>
         </pre>
     </div>
     <?php include('./includes/footer.inc.php'); ?>
