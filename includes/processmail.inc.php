@@ -31,3 +31,12 @@ if (!$suspect) {
         }
     }
 }
+// validate the user's email
+if (!$suspect && !empty($email)) {
+    $validemail = filter_input(INPUT_POST,'email',FILTER_VALIDATE_EMAIL);
+    if($validemail) {
+        $headers .= "\r\nReplay-To: {$validemail}";
+    } else {
+        $errors['email'] = true;
+    }
+}

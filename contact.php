@@ -12,6 +12,9 @@
 		//list expected fields
 		$expected = array('name','email','comments');
 		$required = array('name','comments','email');
+        // create additional headers
+        $headers = "From: Japan Journey<feedback@example.com>\r\n";
+        $headers .= 'Content-Type: text/plain; charset=utf-8';
 		require('./includes/processmail.inc.php');
 	}
 ?>
@@ -53,6 +56,8 @@
                 <label for="email">Email:
                 <?php if ($missing && in_array('email', $missing)) { ?>
                     <span class="warning">Please enter your email address</span>
+                <?php } elseif (isset($errors['email'])) { ?>
+                    <span class="warning">Invalid email address</span>
                 <?php } ?>
                 </label>
                 <input name="email" id="email" type="text" class="formbox"
@@ -66,7 +71,10 @@
                     <span class="warning">Please enter your comments</span>
                 <?php } ?>
                 </label>
-                <textarea name="comments" id="comments" cols="60" rows="8"></textarea>
+                <textarea name="comments" id="comments" cols="60" rows="8"><?php
+                    if ($missing || $errors) {
+                        echo htmlentities($comments, ENT_COMPAT, 'UTF-8');
+                    } ?></textarea>
             </p>
             <p>
                 <input name="send" id="send" type="submit" value="Send message">
