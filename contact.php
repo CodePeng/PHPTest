@@ -13,8 +13,12 @@ if (isset($_POST['send'])) {
     $to = 'statchou@gmail.com';
     $subject = 'Feedback from Japan Journey';
     //list expected fields
-    $expected = array('name', 'email', 'comments');
-    $required = array('name', 'comments', 'email');
+    $expected = array('name', 'email', 'comments', 'subscribe');
+    $required = array('name', 'comments', 'email', 'subscribe');
+    // set default values for variables that might not exist
+    if (!isset($_POST['subscribe'])) {
+        $_POST['subscribe'] = '';
+    }
     // create additional headers
     $headers = "From: Japan Journey<feedback@example.com>\r\n";
     $headers .= 'Content-Type: text/plain; charset=utf-8';
@@ -94,21 +98,46 @@ if (isset($_POST['send'])) {
                         echo htmlentities($comments, ENT_COMPAT, 'UTF-8');
                     } ?></textarea>
             </p>
-            <?php if (isset($errors['recaptcha'])) { ?>
+            <?php /* if (isset($errors['recaptcha'])) { ?>
                 <p class="warning">The values didn't match. Try again.</p>
             <?php }
-            echo recaptcha_get_html($public_key); ?>
+            echo recaptcha_get_html($public_key); */
+            ?>
+            <fieldset id="subscribe">
+                <h4>Subscribe to newsletter?
+                    <?php if ($missing && in_array('subscribe', $missing)) { ?>
+                        <span class="warning">Please make a selection</span>
+                    <?php } ?>
+                </h4>
+
+                <p>
+                    <input name="subscribe" type="radio" value="Yes" id="subscribe-yes"
+                        <?php
+                        if ($_POST && $_POST['subscribe'] == 'Yes') {
+                            echo 'check';
+                        } ?>>
+                    <label for="subscribe-yes">Yes</label>
+                    <input name="subscribe" type="radio" value="No" id="subscribe-no"
+                        <?php
+                        if (!$_POST || $_POST['subscribe'] == 'No') {
+                            echo 'check';
+                        } ?>>
+                    <label for="subscribe-no">No</label>
+                </p>
+            </fieldset>
             <p>
                 <input name="send" id="send" type="submit" value="Send message">
             </p>
         </form>
         <pre>
-        <?php if ($_POST && $mailSent) {
+        <?php /* if ($_POST && $mailSent) {
             echo "\n";
             echo htmlentities($message, ENT_COMPAT, 'UTF-8') . "\n";
             echo 'Headers: ' . htmlentities($headers, ENT_COMPAT, 'UTF-8');
-        } ?>
+        } */
+        ?>
         </pre>
+
     </div>
     <?php include('./includes/footer.inc.php'); ?>
 </div>
