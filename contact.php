@@ -14,9 +14,9 @@ if (isset($_POST['send'])) {
     $to = 'statchou@gmail.com';
     $subject = 'Feedback from Japan Journey';
     //list expected fields
-    $expected = array('name', 'email', 'comments', 'subscribe', 'interests');
+    $expected = array('name', 'email', 'comments', 'subscribe', 'interests', 'howhear');
     // set required fields
-    $required = array('name', 'comments', 'email', 'subscribe', 'interests');
+    $required = array('name', 'comments', 'email', 'subscribe', 'interests', 'howhear');
     // set default values for variables that might not exist
     if (!isset($_POST['subscribe'])) {
         $_POST['subscribe'] = '';
@@ -200,6 +200,37 @@ if (isset($_POST['send'])) {
                     </p>
                 </div>
             </fieldset>
+
+            <p>
+                <label for="select">How did you hear of Japan Journey?
+                    <?php if ($missing && in_array('howhear', $missing)) { ?>
+                        <span class="warning">Please make a selection</span>
+                    <?php } ?>
+                </label>
+                <select name="howhear" id="howhear">
+                    <option value=""
+                        <?php
+                        if (!$_POST || $_POST['howhear'] == '') {
+                            echo 'selected';
+                        } ?>>Select one</option>
+                    <option value="foED"
+                        <?php
+                        if ($_POST && $_POST['howhear'] == 'foED') {
+                            echo 'selected';
+                        } ?>>friends of ED</option>
+                    <option value="recommended by friend"
+                        <?php
+                        if ($_POST && $_POST['howhear'] == 'recommended by friend') {
+                            echo 'selected';
+                        } ?>>Recommended by a friend</option>
+                    <option value="search engine"
+                        <?php
+                        if ($_POST && $_POST['howhear'] == 'search engine') {
+                            echo 'selected';
+                        } ?>>Search engine</option>
+                </select>
+            </p>
+
             <p>
                 <input name="send" id="send" type="submit" value="Send message">
             </p>
