@@ -14,12 +14,20 @@ if (isset($_POST['send'])) {
     $to = 'statchou@gmail.com';
     $subject = 'Feedback from Japan Journey';
     //list expected fields
-    $expected = array('name', 'email', 'comments', 'subscribe');
+    $expected = array('name', 'email', 'comments', 'subscribe', 'interests');
     // set required fields
-    $required = array('name', 'comments', 'email', 'subscribe');
+    $required = array('name', 'comments', 'email', 'subscribe', 'interests');
     // set default values for variables that might not exist
     if (!isset($_POST['subscribe'])) {
         $_POST['subscribe'] = '';
+    }
+    if (!isset($_POST['interests'])) {
+        $_POST['interests'] = array();
+    }
+    // minimum number of required check boxes
+    $minCheckboxes = 2;
+    if (count($_POST['interests']) < $minCheckboxes) {
+        $errors['interests'] = true;
     }
     // create additional headers
     $headers = "From: Japan Journey<feedback@example.com>\r\n";
@@ -106,26 +114,91 @@ if (isset($_POST['send'])) {
             echo recaptcha_get_html($public_key); */
             ?>
             <fieldset id="subscribe">
-                <h4>Subscribe to newsletter?
+                <h2>Subscribe to newsletter?
                     <?php if ($missing && in_array('subscribe', $missing)) { ?>
                         <span class="warning">Please make a selection</span>
                     <?php } ?>
-                </h4>
+                </h2>
 
                 <p>
                     <input name="subscribe" type="radio" value="Yes" id="subscribe-yes"
                         <?php
                         if ($_POST && $_POST['subscribe'] == 'Yes') {
-                            echo 'check';
+                            echo 'checked';
                         } ?>>
                     <label for="subscribe-yes">Yes</label>
                     <input name="subscribe" type="radio" value="No" id="subscribe-no"
                         <?php
                         if ($_POST && $_POST['subscribe'] == 'No') {
-                            echo 'check';
+                            echo 'checked';
                         } ?>>
                     <label for="subscribe-no">No</label>
                 </p>
+            </fieldset>
+
+            <fieldset id="interests">
+                <h2>Interests in Japan
+                    <?php if (isset($errors['interests'])) { ?>
+                        <span class="warning">Please select at least <?php echo $minCheckboxes; ?></span>
+                    <?php } ?>
+                </h2>
+
+                <div>
+                    <p>
+                        <input type="checkbox" name="interests[]" value="Anime/manga" id="anime"
+                            <?php
+                            if ($_POST && in_array('Anime/manga', $_POST['interests'])) {
+                                echo 'checked';
+                            } ?>>
+                        <label for="anime">Anime/manga</label>
+                    </p>
+
+                    <p>
+                        <input type="checkbox" name="interests[]" value="Arts & crafts" id="art"
+                            <?php
+                            if ($_POST && in_array('Arts & crafts', $_POST['interests'])) {
+                                echo 'checked';
+                            } ?>>
+                        <label for="art">Arts &amp; crafts</label>
+                    </p>
+
+                    <p>
+                        <input type="checkbox" name="interests[]" value="Judo, karate, etc" id="judo"
+                            <?php
+                            if ($_POST && in_array('Judo, karate, etc', $_POST['interests'])) {
+                                echo 'checked';
+                            } ?>>
+                        <label for="judo">Judo, karate, etc</label>
+                    </p>
+                </div>
+                <div>
+                    <p>
+                        <input type="checkbox" name="interests[]" value="Language/literature" id="lang_lit"
+                            <?php
+                            if ($_POST && in_array('Language/literature', $_POST['interests'])) {
+                                echo 'checked';
+                            } ?>>
+                        <label for="lang_lit">Language/literature</label>
+                    </p>
+
+                    <p>
+                        <input type="checkbox" name="interests[]" value="Science & technology" id="scitech"
+                            <?php
+                            if ($_POST && in_array('Science & technology', $_POST['interests'])) {
+                                echo 'checked';
+                            } ?>>
+                        <label for="scitech">Science &amp; technology</label>
+                    </p>
+
+                    <p>
+                        <input type="checkbox" name="interests[]" value="Travel" id="travel"
+                            <?php
+                            if ($_POST && in_array('Travel', $_POST['interests'])) {
+                                echo 'checked';
+                            } ?>>
+                        <label for="travel">Travel</label>
+                    </p>
+                </div>
             </fieldset>
             <p>
                 <input name="send" id="send" type="submit" value="Send message">
