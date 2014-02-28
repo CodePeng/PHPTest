@@ -1,8 +1,9 @@
 <?php
 include('./includes/title.inc.php');
-require_once('./includes/recaptchalib.php');
+/*require_once('./includes/recaptchalib.php');
 $public_key = '6LeaUO8SAAAAAD3r6ZEKWwUPHwGfdkmU7T9CjCtR';
 $private_key = '6LeaUO8SAAAAAD9rlmCtYztqBw4pTP5wjgGW2Q3H';
+*/
 $errors = array();
 $missing = array();
 //check if the form has been submitted.
@@ -14,6 +15,7 @@ if (isset($_POST['send'])) {
     $subject = 'Feedback from Japan Journey';
     //list expected fields
     $expected = array('name', 'email', 'comments', 'subscribe');
+    // set required fields
     $required = array('name', 'comments', 'email', 'subscribe');
     // set default values for variables that might not exist
     if (!isset($_POST['subscribe'])) {
@@ -22,10 +24,10 @@ if (isset($_POST['send'])) {
     // create additional headers
     $headers = "From: Japan Journey<feedback@example.com>\r\n";
     $headers .= 'Content-Type: text/plain; charset=utf-8';
-    $response = recaptcha_check_answer($private_key, $_SERVER['REMOTE_ADDR'], $_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field']);
+    /*$response = recaptcha_check_answer($private_key, $_SERVER['REMOTE_ADDR'], $_POST['recaptcha_challenge_field'], $_POST['recaptcha_response_field']);
     if (!$response->is_valid) {
         $errors['recaptcha'] = true;
-    }
+    } */
     require('./includes/processmail.inc.php');
     if ($mailSent) {
         header("Location: http://{$_SERVER['HTTP_HOST']}" . dirname($_SERVER['PHP_SELF']) . "/thank_you.php");
@@ -119,7 +121,7 @@ if (isset($_POST['send'])) {
                     <label for="subscribe-yes">Yes</label>
                     <input name="subscribe" type="radio" value="No" id="subscribe-no"
                         <?php
-                        if (!$_POST || $_POST['subscribe'] == 'No') {
+                        if ($_POST && $_POST['subscribe'] == 'No') {
                             echo 'check';
                         } ?>>
                     <label for="subscribe-no">No</label>
