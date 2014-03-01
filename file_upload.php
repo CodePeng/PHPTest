@@ -11,7 +11,15 @@ if (isset($_POST['upload'])) {
         $destination = '/home/users/web/b1060/ipg.codepengcom/upload_test/';
     }
     // move the file to the upload folder and rename it
-    $isUploaded = move_uploaded_file($_FILES['image']['tmp_name'], $destination . $_FILES['image']['name']);
+    //$isUploaded = move_uploaded_file($_FILES['image']['tmp_name'], $destination . $_FILES['image']['name']);
+    require_once('./classes/Ps2/Upload.php');
+    try {
+        $upload = new Ps2_Upload($destination);
+        $upload->move();
+        $result = $upload->getMessages();
+    } catch (Exception $e) {
+        echo $e->getMessage();
+    }
 }
 ?>
 <!DOCTYPE HTML>
@@ -22,6 +30,14 @@ if (isset($_POST['upload'])) {
 </head>
 
 <body>
+<?php
+if (isset($result)) {
+    echo '<ul>';
+    foreach ($result as $message) {
+        echo "<li>{$message}</li>";
+    }
+    echo '</ul>';
+} ?>
 <form action="" method="post" enctype="multipart/form-data" id="uploadImage">
     <p>
         <label for="image">Upload image:</label>
@@ -39,11 +55,11 @@ if (isset($_POST['upload'])) {
     print_r($_FILES);
 }
 
-if (isset($isUploaded) && $isUploaded == true) {
+/*if (isset($isUploaded) && $isUploaded == true) {
     echo 'Uploaded';
 } else {
     echo 'failed';
-}
+} */
 ?>
 </pre>
 </body>
