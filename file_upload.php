@@ -5,7 +5,11 @@ ini_set('display_errors', '1');
 $max = 5120000; //5MB
 if (isset($_POST['upload'])) {
     // define the path to the upload folder
-    $destination = '/Users/pengzhou/upload_test/';
+    if ($_SERVER['SERVER_NAME'] == 'localhost') {
+        $destination = '/Users/pengzhou/upload_test/';
+    } else if ($_SERVER['SERVER_NAME'] == 'codepeng.com') {
+        $destination = '/home/users/web/b1060/ipg.codepengcom/upload_test/';
+    }
     // move the file to the upload folder and rename it
     $isUploaded = move_uploaded_file($_FILES['image']['tmp_name'], $destination . $_FILES['image']['name']);
 }
@@ -24,6 +28,7 @@ if (isset($_POST['upload'])) {
         <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $max; ?>">
         <input type="file" name="image" id="image">
     </p>
+
     <p>
         <input type="submit" name="upload" id="upload" value="Upload">
     </p>
@@ -34,7 +39,7 @@ if (isset($_POST['upload'])) {
     print_r($_FILES);
 }
 
-if(isset($isUploaded) && $isUploaded == true) {
+if (isset($isUploaded) && $isUploaded == true) {
     echo 'Uploaded';
 } else {
     echo 'failed';
