@@ -15,6 +15,8 @@ if (isset($_POST['upload'])) {
     require_once('./classes/Ps2/Upload.php');
     try {
         $upload = new Ps2_Upload($destination);
+        $upload->setMaxSize($max);
+        $upload->addPermittedTypes(array('application/pdf','text/plain'));
         $upload->move();
         $result = $upload->getMessages();
     } catch (Exception $e) {

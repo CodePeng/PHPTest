@@ -10,7 +10,7 @@ class Ps2_Upload
 {
     protected $_uploaded = array();
     protected $_destination;
-    protected $_max = 5120000;
+    protected $_max = 51200;
     protected $_messages = array();
     protected $_permitted = array('image/gif',
         'image/jpeg',
@@ -83,11 +83,41 @@ class Ps2_Upload
     }
 
     protected function checkType($filename, $type) {
-        if (!in_array($type, $this->_permitted)) {
+        if (empty($type)) {
+            return false;
+        }
+        elseif (!in_array($type, $this->_permitted)) {
             $this->_messages[] = "$filename is not a permitted type of file.";
             return false;
         } else {
             return true;
         }
     }
+
+    public function addPermittedTypes($types) {
+        $types = (array) $types;
+        $this->isValidMime($types);
+        $this->_permitted = array_merge($this->_permitted, $types);
+    }
+
+    protected function isValidMime($types) {
+        $alsoValid = array('image/tiff',
+            'application/pdf',
+            'text/plain',
+            'text/rtf');
+        $valid = array_merge($this->_permitted, $alsoValid);
+        foreach ($types as $type) {
+            if (!in_array($type, $valid)) {
+                throw new Exception("$type is not a permitted MIME type");
+            }
+        }
+    }
+
+    public function setMaxSize($num) {
+        if (!is_numeric($num)) {
+            throw new Exception("Maximum size must be a number.");
+        }
+        $this->_max = (int) $num;
+    }
+
 }
