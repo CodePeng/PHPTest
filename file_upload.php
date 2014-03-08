@@ -7,7 +7,7 @@ if (isset($_POST['upload'])) {
     // define the path to the upload folder
     if ($_SERVER['SERVER_NAME'] == 'localhost') {
         $destination = '/Users/pengzhou/upload_test/';
-    } else if ($_SERVER['SERVER_NAME'] == 'codepeng.com') {
+    } else if ($_SERVER['SERVER_NAME'] == 'codepeng.com' || $_SERVER['SERVER_NAME'] == 'www.codepeng.com') {
         $destination = '/home/users/web/b1060/ipg.codepengcom/upload_test/';
     }
     // move the file to the upload folder and rename it

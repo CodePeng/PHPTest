@@ -26,16 +26,21 @@ class Ps2_Upload
         $this->_uploaded = $_FILES;
     }
 
-    public function move() {
+    public function move($overwrite = false) {
         $field = current($this->_uploaded);
         $OK = $this->checkError($field['name'], $field['error']);
         if ($OK) {
             $sizeOK = $this->checkSize($field['name'], $field['size']);
             $typeOK = $this->checkType($field['name'], $field['type']);
             if ($sizeOK && $typeOK) {
-                $success = move_uploaded_file($field['tmp_name'], $this->_destination . $field['name']);
+                $name = $this->checkName($field['name'], $overwrite);
+                $success = move_uploaded_file($field['tmp_name'], $this->_destination . $name);
                 if ($success) {
-                    $this->_messages[] = $field['name'] . ' uploaded successfully';
+                    $message = $field['name'] . ' uploaded successfully';
+                    if ($this->_renamed) {
+                        $message .= " and renamed {$name}";
+                    }
+                    $this->_messages[] = $message;
                 } else {
                     $this->_messages[] = 'Could not upload ' . $field['name'];
                 }
@@ -65,6 +70,33 @@ class Ps2_Upload
                 $this->_messages[] = "System error uploading $filename. Contact webmaster.";
                 return false;
         }
+    }
+
+    protected function checkName($name, $overwrite) {
+        $nospaces = str_replace(' ', '_',$name);
+        if ($nospaces != $name) {
+            $this->_renamed = true;
+        }
+        if (!$overwrite) {
+            //rename the file if it already exists
+            $existing = scandir($this->_destination);
+            if (in_array($nospaces, $existing)) {
+                $dot = strrpos($nospaces, '.');
+                if ($dot) {
+                    $base = substr($nospaces, 0, $dot);
+                    $extension = substr($nospaces, $dot);
+                } else {
+                    $base = $nospaces;
+                    $extension = '';
+                }
+                $i = 1;
+                do {
+                    $nospaces = $base . '_' . $i++ . $extension;
+                } while (in_array($nospaces,$existing));
+                $this->_renamed = true;
+            }
+        }
+        return $nospaces;
     }
 
     public function getMaxSize() {
@@ -119,5 +151,7 @@ class Ps2_Upload
         }
         $this->_max = (int) $num;
     }
+
+
 
 }
