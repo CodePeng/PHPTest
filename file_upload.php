@@ -44,7 +44,7 @@ if (isset($result)) {
     <p>
         <label for="image">Upload image:</label>
         <input type="hidden" name="MAX_FILE_SIZE" value="<?php echo $max; ?>">
-        <input type="file" name="image" id="image">
+        <input type="file" name="image[]" id="image" multiple>
     </p>
 
     <p>

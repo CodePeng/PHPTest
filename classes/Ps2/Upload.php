@@ -28,21 +28,33 @@ class Ps2_Upload
 
     public function move($overwrite = false) {
         $field = current($this->_uploaded);
-        $OK = $this->checkError($field['name'], $field['error']);
+        if (is_array($field['name'])) {
+            foreach ($field['name'] as $number => $filename) {
+                // process multiple upload
+                $this->_renamed = false;
+                $this->processFile($filename, $field['error'][$number], $field['size'][$number], $field['type'][$number], $field['tmp_name'][$number], $overwrite);
+            }
+        } else {
+            $this->processFile($field['name'], $field['error'], $field['size'], $field['type'], $field['tmp_name'], $overwrite);
+        }
+    }
+
+    protected function processFile($filename, $error, $size, $type, $tmp_name, $overwrite) {
+        $OK = $this->checkError($filename, $error);
         if ($OK) {
-            $sizeOK = $this->checkSize($field['name'], $field['size']);
-            $typeOK = $this->checkType($field['name'], $field['type']);
+            $sizeOK = $this->checkSize($filename, $size);
+            $typeOK = $this->checkType($filename, $type);
             if ($sizeOK && $typeOK) {
-                $name = $this->checkName($field['name'], $overwrite);
-                $success = move_uploaded_file($field['tmp_name'], $this->_destination . $name);
+                $name = $this->checkName($filename, $overwrite);
+                $success = move_uploaded_file($tmp_name, $this->_destination . $name);
                 if ($success) {
-                    $message = $field['name'] . ' uploaded successfully';
+                    $message = $filename . ' uploaded successfully';
                     if ($this->_renamed) {
                         $message .= " and renamed {$name}";
                     }
                     $this->_messages[] = $message;
                 } else {
-                    $this->_messages[] = 'Could not upload ' . $field['name'];
+                    $this->_messages[] = 'Could not upload ' . $filename;
                 }
             }
         }
