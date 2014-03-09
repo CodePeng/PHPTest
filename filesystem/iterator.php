@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Burrowing Down with the RecursiveDirectoryIterator</title>
+<title>Filtering with the RegexIterator</title>
 </head>
 
 <body>
