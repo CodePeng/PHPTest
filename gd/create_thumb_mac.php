@@ -12,6 +12,7 @@ if (isset($_POST['create'])) {
         }
         $thumb->setMaxSize(100);
         $thumb->setSuffix('small');
+        $thumb->create();
         $thumb->test();
     } catch (Exception $e) {
         echo $e->getMessage();

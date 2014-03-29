@@ -83,6 +83,32 @@ class Ps2_Thumbnail
         }
     }
 
+    protected function calculateSize($width, $height) {
+        if ($width <= $this->_maxSize && $height <= $this->_maxSize) {
+            $ratio = 1;
+        } elseif ($width > $height) {
+            $ratio = $this->_maxSize/$width;
+        } else {
+            $ratio = $this->_maxSize/$height;
+        }
+        $this->_thumbwidth = round($width * $ratio);
+        $this->_thumbheight = round($height * $ratio);
+    }
+
+    protected function getName() {
+        $extensions = array('/\.jpg$/i', '/\.jpeg$/i', '/\.png$/i', '/\.gif$/i');
+        $this->_name = preg_replace($extensions, '', basename($this->_original));
+    }
+
+    public function create() {
+        if ($this->_canProcess && $this->_originalwidth != 0) {
+            $this->calculateSize($this->_originalwidth, $this->_originalheight);
+            $this->getName();
+        } elseif ($this->_originalwidth == 0) {
+            $this->_messages[] = 'Cannot determine size of ' . $this->_original;
+        }
+    }
+
     public function test()
     {
         echo 'File: ' . $this->_original . '<br>';
@@ -92,6 +118,9 @@ class Ps2_Thumbnail
         echo 'Destination: ' . $this->_destination . '<br>';
         echo 'Max size: ' . $this->_maxSize . '<br>';
         echo 'Suffix: ' . $this->_suffix . '<br>';
+        echo 'Thumb width: ' . $this->_thumbwidth . '<br>';
+        echo 'Thumb height: ' . $this->_thumbheight . '<br>';
+        echo 'Base name: ' . $this->_name . '<br>';
         if ($this->_messages) {
             print_r($this->_messages);
         }
