@@ -13,7 +13,7 @@ if (isset($_POST['create'])) {
         $thumb->setMaxSize(100);
         $thumb->setSuffix('small');
         $thumb->create();
-        $thumb->test();
+        $messages = $thumb->getMessages();
     } catch (Exception $e) {
         echo $e->getMessage();
     }
@@ -27,6 +27,15 @@ if (isset($_POST['create'])) {
 </head>
 
 <body>
+<?php
+if (isset($messages) && !empty($messages)) {
+    echo '<ul>';
+    foreach ($messages as $message) {
+        echo "<li>$message</li>";
+    }
+    echo '</ul>';
+}
+?>
 <form id="form1" name="form1" method="post" action="">
     <p>
         <select name="pix" id="pix">

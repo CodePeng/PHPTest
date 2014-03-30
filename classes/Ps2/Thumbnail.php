@@ -104,11 +104,52 @@ class Ps2_Thumbnail
         if ($this->_canProcess && $this->_originalwidth != 0) {
             $this->calculateSize($this->_originalwidth, $this->_originalheight);
             $this->getName();
+            $this->createThumbnail();
         } elseif ($this->_originalwidth == 0) {
             $this->_messages[] = 'Cannot determine size of ' . $this->_original;
         }
     }
 
+    protected function createImageResource() {
+        if ($this->_imageType == 'jpeg') {
+            return imagecreatefromjpeg($this->_original);
+        } elseif ($this->_imageType == 'png') {
+            return imagecreatefrompng($this->_original);
+        } elseif ($this->_imageType == 'gif') {
+            return imagecreatefromgif($this->_original);
+        }
+    }
+
+    protected function createThumbnail() {
+        $resource = $this->createImageResource();
+        $thumb = imagecreatetruecolor($this->_thumbwidth, $this->_thumbheight);
+        imagecopyresampled($thumb, $resource, 0, 0, 0, 0, $this->_thumbwidth, $this->_thumbheight, $this->_originalwidth, $this->_originalheight);
+        $newname = $this->_name . $this->_suffix;
+        if ($this->_imageType == 'jpeg') {
+            $newname .= '.jpg';
+            $success = imagejpeg($thumb, $this->_destination . $newname, 100);
+        } elseif ($this->_imageType == 'png') {
+            $newname .= '.png';
+            $success = imagepng($thumb, $this->_destination . $newname);
+        } elseif ($this->_imageType == 'gif') {
+            $newname .= '.gif';
+            $success = imagegif($thumb, $this->_destination . $newname);
+        }
+        if ($success) {
+            $this->_messages[] = "$newname created successfully.";
+        } else {
+            $this->_messages[] = "Couldn't create a thumbnail for " . basename($this->_original);
+        }
+        imagedestroy($resource);
+        imagedestroy($thumb);
+    }
+
+    public function getMessages() {
+        return $this->_messages;
+    }
+
+
+/*
     public function test()
     {
         echo 'File: ' . $this->_original . '<br>';
@@ -125,4 +166,5 @@ class Ps2_Thumbnail
             print_r($this->_messages);
         }
     }
+*/
 }
