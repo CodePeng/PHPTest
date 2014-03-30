@@ -1,4 +1,5 @@
 <?php
+//namespace Ps2;
 
 class Ps2_Thumbnail
 {

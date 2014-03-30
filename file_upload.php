@@ -1,5 +1,5 @@
 <?php
-namespace Ps2;
+//namespace Ps2;
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
 // set the maximum upload size in bytes
@@ -15,7 +15,7 @@ if (isset($_POST['upload'])) {
     //$isUploaded = move_uploaded_file($_FILES['image']['tmp_name'], $destination . $_FILES['image']['name']);
     require_once('./classes/Ps2/Upload.php');
     try {
-        $upload = new Upload($destination);
+        $upload = new Ps2_Upload($destination);
         $upload->setMaxSize($max);
         $upload->addPermittedTypes(array('application/pdf','text/plain'));
         $upload->move();

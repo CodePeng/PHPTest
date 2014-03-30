@@ -1,12 +1,12 @@
 <?php
-namespace Ps2;
+//namespace Ps2;
 /**
  * Created by PhpStorm.
  * User: pengzhou
  * Date: 2/28/14
  * Time: 9:57 PM
  */
-class Upload
+class Ps2_Upload
 {
     protected $_uploaded = array();
     protected $_destination;
