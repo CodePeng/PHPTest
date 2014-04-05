@@ -11,18 +11,18 @@ ob_start();
 
 <body>
 <?php
-// check whether session variable is set
+// check whether sessions variable is set
 if (isset($_SESSION['name'])) {
   // if set, greet by name
   echo 'Hi, ' . $_SESSION['name'] . '. See, I remembered your name!<br>';
-  // unset session variable
+  // unset sessions variable
   unset($_SESSION['name']);
-  // invalidate the session cookie
+  // invalidate the sessions cookie
   if (isset($_COOKIE[session_name()])) {
     setcookie(session_name(), '', time()-86400, '/');
   }
   ob_end_flush();
-  // end session
+  // end sessions
   session_destroy();
   echo '<a href="session_02.php">Page 2</a>';
 } else {
