@@ -11,7 +11,7 @@ if (!file_exists($userlist) || !is_readable($userlist)) {
     // assign each element of the temp array to a named array key
     // $user[$i] = array('name' => $tmp[0], 'password' => rtrim($tmp[1]));
 	// check for a matching record
-    if ($tmp[0] == $username && rtrim($tmp[1]) == $password) {
+    if ($tmp[0] == $username && sha1($tmp[0] . rtrim($tmp[1]))== $password) {
       $_SESSION['authenticated'] = 'Jethro Tull';
 	  session_regenerate_id();
 	  break;

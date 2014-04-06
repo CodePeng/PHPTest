@@ -4,10 +4,8 @@ ini_set('display_errors', '1');
 $error = '';
 if (isset($_POST['login'])) {
     session_start();
-//    $username = trim($_POST['username']);
-//    $password = sha1($username . $_POST['pwd']);
-    $username = $_POST['username'];
-    $password = $_POST['pwd'];
+    $username = trim($_POST['username']);
+    $password = sha1($username . $_POST['pwd']);
     // location of usernames and passwords
     if ($_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] =='PhpStorm 7.1') {
         $userlist = '/Users/pengzhou/private/filetest_02.txt';
