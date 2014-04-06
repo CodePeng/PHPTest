@@ -3,17 +3,12 @@ if (isset($_POST['register'])) {
     $username = trim($_POST['username']);
     $password = trim($_POST['pwd']);
     $retyped = trim($_POST['conf_pwd']);
-    require_once('../classes/Ps2/CheckPassword.php');
-    $checkPwd = new Ps2_CheckPassword($password, 10);
-    $checkPwd->requireMixedCase();
-    $checkPwd->requireNumbers(2);
-    $checkPwd->requireSymbols();
-    $passwordOK = $checkPwd->check();
-    if ($passwordOK) {
-        $result = array('Password OK');
-    } else {
-        $result = $checkPwd->getErrors();
+    if ($_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] =='PhpStorm 7.1') {
+        $userfile = '/Users/pengzhou/private/encrypted.txt';
+    } else if ($_SERVER['SERVER_NAME'] == 'codepeng.com' || $_SERVER['SERVER_NAME'] == 'www.codepeng.com') {
+        $userfile = '/home/users/web/b1060/ipg.codepengcom/private/encrypted.txt';
     }
+    require_once('../includes/register_user_text.inc.php');
 }
 ?>
 <!DOCTYPE HTML>
@@ -37,10 +32,14 @@ input[type="submit"] {
 <body>
 <h1>Register User</h1>
 <?php
-if (isset($result)) {
+if (isset($errors) || isset($result)) {
     echo '<ul>';
-    foreach ($result as $item) {
-        echo "<li>$item</li>";
+    if (!empty($errors)) {
+        foreach ($errors as $item) {
+            echo "<li>$item</li>";
+        }
+    } else {
+        echo "<li>$result</li>";
     }
     echo '</ul>';
 }

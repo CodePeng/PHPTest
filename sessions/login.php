@@ -8,9 +8,9 @@ if (isset($_POST['login'])) {
     $password = sha1($username . $_POST['pwd']);
     // location of usernames and passwords
     if ($_SERVER['SERVER_NAME'] == 'localhost' || $_SERVER['SERVER_NAME'] =='PhpStorm 7.1') {
-        $userlist = '/Users/pengzhou/private/filetest_02.txt';
+        $userlist = '/Users/pengzhou/private/encrypted.txt';
     } else if ($_SERVER['SERVER_NAME'] == 'codepeng.com' || $_SERVER['SERVER_NAME'] == 'www.codepeng.com') {
-        $userlist = '/home/users/web/b1060/ipg.codepengcom/private/filetest_02.txt';
+        $userlist = '/home/users/web/b1060/ipg.codepengcom/private/encrypted.txt';
     }
     // location to redirect on success
     $redirect = 'http://' . $_SERVER['HTTP_HOST'] . '/Test/sessions/menu.php';
