@@ -13,6 +13,7 @@ if (!file_exists($userlist) || !is_readable($userlist)) {
 	// check for a matching record
     if ($tmp[0] == $username && rtrim($tmp[1]) == $password) {
       $_SESSION['authenticated'] = 'Jethro Tull';
+      $_SESSION['start'] = time();
 	  session_regenerate_id();
 	  break;
 	}

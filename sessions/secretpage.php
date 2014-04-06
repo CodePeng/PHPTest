@@ -1,9 +1,5 @@
 <?php session_start();
-// if sessions variable not set, redirect to login page
-if (!isset($_SESSION['authenticated'])) {
-    header("Location: http://{$_SERVER['HTTP_HOST']}/Test/sessions/login.php");
-  exit;
-}
+require_once('../includes/session_timeout.inc.php');
 ?>
 <!DOCTYPE HTML>
 <html>
