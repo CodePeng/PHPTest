@@ -15,7 +15,6 @@ function dbConnect($usertype, $connectionType = 'mysqli') {
   } else {
 	exit('Unrecognized connection type');
   }
-    return new mysqli($host, $user, $pwd, $db);
   if ($connectionType == 'mysqli') {
 	// return new mysqli($host, $user, $pwd, $db) or die ('Cannot open database'); Don't use like that, or it have problem
       return new mysqli($host, $user, $pwd, $db);
