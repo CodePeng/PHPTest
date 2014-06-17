@@ -8,12 +8,15 @@ $result = $conn->query($sql) or die(mysqli_error());
 // extract the first record as an array
 $row = $result->fetch_assoc();
 // get the name and caption for the main image
-$mainImage = $row['filename'];
-$caption = $row['caption'];
+if (isset($_GET['image'])) {
+    $mainImage = $_GET['image'];
+} else {
+    $mainImage = $row['filename'];
+}
 // get the dimensions of the main image
 $imageSize = getimagesize('images/'.$mainImage);
-
 ?>
+
 <!DOCTYPE HTML>
 <html>
 <head>
@@ -36,12 +39,18 @@ $imageSize = getimagesize('images/'.$mainImage);
             <table id="thumbs">
                 <tr>
                     <!--This row needs to be repeated-->
-                    <td><a href="gallery.php"><img src="images/thumbs/<?php echo $row['filename']; ?>" alt="<?php echo $row['caption']; ?>" width="80" height="54"></a></td>
+                    <?php do {
+                        // set caption if thumbnail is same as main image
+                        if ($row['filename'] == $mainImage) {
+                            $caption = $row['caption'];
+                        }?>
+                    <td><a href="<?php echo $_SERVER['PHP_SELF']; ?>?image=<?php echo $row['filename']; ?>"><img src="images/thumbs/<?php echo $row['filename']; ?>" alt="<?php echo $row['caption']; ?>" width="80" height="54"></a></td>
+                    <?php } while($row = $result->fetch_assoc()); ?>
                 </tr>
                 <!-- Navigation link needs to go here -->
             </table>
             <div id="main_image">
-                <p><img src="images/basin.jpg" alt="" width="350" height="237"></p>
+                <p><img src="images/<?php echo $mainImage; ?>" alt="" width="350" height="237"></p>
                 <p>Water basin at Ryoanji temple, Kyoto</p>
             </div>
         </div>
