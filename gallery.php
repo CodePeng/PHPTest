@@ -1,6 +1,11 @@
 <?php
 include('./includes/title.inc.php');
 require_once('./includes/connection.inc.php');
+// define number of columns in table
+define('COLS', 2);
+// initialize variables for the horizontal looper
+$pos = 0;
+$firstRow = true;
 $conn = dbConnect('read');
 $sql = 'SELECT filename, caption FROM images';
 // submit the query
@@ -43,9 +48,20 @@ $imageSize = getimagesize('images/'.$mainImage);
                         // set caption if thumbnail is same as main image
                         if ($row['filename'] == $mainImage) {
                             $caption = $row['caption'];
-                        }?>
+                        }
+                        // if remainder is 0 and not first row, close row and start new one
+                        if ($pos++ % COLS === 0 && !$firstRow) {
+                            echo '</tr><tr>';
+                        }
+                        // once loop begins, this is no longer true
+                        $firstRow = false;
+                        ?>
                     <td><a href="<?php echo $_SERVER['PHP_SELF']; ?>?image=<?php echo $row['filename']; ?>"><img src="images/thumbs/<?php echo $row['filename']; ?>" alt="<?php echo $row['caption']; ?>" width="80" height="54"></a></td>
-                    <?php } while($row = $result->fetch_assoc()); ?>
+                    <?php } while($row = $result->fetch_assoc());
+                    while ($pos++ % COLS) {
+                    echo '<td>&nbsp;</td>';
+                    }
+                    ?>
                 </tr>
                 <!-- Navigation link needs to go here -->
             </table>
