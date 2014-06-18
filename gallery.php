@@ -79,7 +79,7 @@ $imageSize = getimagesize('images/'.$mainImage);
                         // once loop begins, this is no longer true
                         $firstRow = false;
                         ?>
-                    <td><a href="<?php echo $_SERVER['PHP_SELF']; ?>?image=<?php echo $row['filename']; ?>"><img src="images/thumbs/<?php echo $row['filename']; ?>" alt="<?php echo $row['caption']; ?>" width="80" height="54"></a></td>
+                    <td><a href="<?php echo $_SERVER['PHP_SELF']; ?>?image=<?php echo $row['filename']; ?>&amp;curPage=<?php echo $curPage; ?>"><img src="images/thumbs/<?php echo $row['filename']; ?>" alt="<?php echo $row['caption']; ?>" width="80" height="54"></a></td>
                     <?php } while($row = $result->fetch_assoc());
                     while ($pos++ % COLS) {
                     echo '<td>&nbsp;</td>';
@@ -87,6 +87,36 @@ $imageSize = getimagesize('images/'.$mainImage);
                     ?>
                 </tr>
                 <!-- Navigation link needs to go here -->
+                <tr><td>
+                        <?php
+                        // create a back link if current page greater than 0
+                        if ($curPage > 0) {
+                            echo '<a href="' . $_SERVER['PHP_SELF'] . '?curPage=' . ($curPage-1) . '"> &lt; Prev</a>';
+                        } else {
+                            // otherwise leave the cell empty
+                            echo '&nbsp;';
+                        }
+                        ?>
+                    </td>
+                    <?php
+                    // pad the final row with empty cells if more than 2 columns
+                    if (COLS-2 > 0) {
+                        for ($i = 0; $i < COLS-2; $i++) {
+                            echo '<td>&nbsp;</td>';
+                        }
+                    }
+                    ?>
+                    <td>
+                        <?php
+                        // create a forward link if more records exist
+                        if ($startRow+SHOWMAX < $totalPix) {
+                            echo '<a href="' . $_SERVER['PHP_SELF'] . '?curPage=' . ($curPage+1) . '"> Next &gt;</a>';
+                        } else {
+                            // otherwise leave the cell empty
+                            echo '&nbsp;';
+                        }
+                        ?>
+                    </td></tr>
             </table>
             <div id="main_image">
                 <p><img src="images/<?php echo $mainImage; ?>" alt="" width="350" height="237"></p>
