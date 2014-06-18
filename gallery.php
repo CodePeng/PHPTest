@@ -6,8 +6,21 @@ define('COLS', 2);
 // initialize variables for the horizontal looper
 $pos = 0;
 $firstRow = true;
+// set maximum number of records
+define('SHOWMAX', 6);
 $conn = dbConnect('read');
-$sql = 'SELECT filename, caption FROM images';
+// prepare SQL to get total records
+$getTotal = 'SELECT COUNT(*) FROM images';
+// submit query and store result as $totalPix
+$total = $conn->query($getTotal);
+$row = $total->fetch_row();
+$totalPix = $row[0];
+// set the current page
+$curPage = isset($_GET['curPage']) ? $_GET['curPage'] : 0;
+// calculate the start row of the subset
+$startRow = $curPage * SHOWMAX;
+// prepare SQL to retrieve subset of image details
+$sql = "SELECT filename, caption FROM images LIMIT $startRow," . SHOWMAX;
 // submit the query
 $result = $conn->query($sql) or die(mysqli_error());
 // extract the first record as an array
@@ -39,7 +52,17 @@ $imageSize = getimagesize('images/'.$mainImage);
     <?php include('./includes/menu.inc.php'); ?>
     <div id="maincontent">
         <h2>Images of Japan</h2>
-        <p id="picCount">Displaying 1 to 6 of 8</p>
+        <p id="picCount">Displaying  <?php echo $startRow+1;
+            if ($startRow+1 < $totalPix) {
+                echo ' to ';
+                if ($startRow+SHOWMAX < $totalPix) {
+                    echo $startRow+SHOWMAX;
+                } else {
+                    echo $totalPix;
+                }
+            }
+            echo " of $totalPix";
+            ?></p>
         <div id="gallery">
             <table id="thumbs">
                 <tr>
